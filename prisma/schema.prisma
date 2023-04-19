@@ -11,15 +11,16 @@ datasource db {
 }
 
 model User {
-  id      String    @id @default(uuid())
-  email   String    @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
-  points  Int       @default(0)
-  Comment Comment[]
-  Room    Room[]
-  Message Message[]
+  id       String    @id @default(uuid())
+  email    String    @unique
+  name     String?
+  password String
+  posts    Post[]
+  profile  Profile?
+  points   Int       @default(0)
+  Comment  Comment[]
+  Room     Room[]
+  Message  Message[]
 }
 
 model Post {
@@ -31,6 +32,7 @@ model Post {
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
   Comment   Comment[]
+  //points    Int       @default(0)
 }
 
 model Comment {
@@ -44,6 +46,7 @@ model Comment {
   parentId  String?
   comments  Comment[] @relation("CommentToComment")
   commentId String?
+  points    Int       @default(0)
 }
 
 model Profile {
@@ -61,10 +64,11 @@ model Room {
 }
 
 model Message {
-  id       String @id @default(uuid())
+  id       String   @id @default(uuid())
   content  String
-  author   User   @relation(fields: [authorId], references: [id])
+  imgages  String[]
+  author   User     @relation(fields: [authorId], references: [id])
   authorId String
-  room     Room   @relation(fields: [roomId], references: [id])
+  room     Room     @relation(fields: [roomId], references: [id])
   roomId   String
 }
