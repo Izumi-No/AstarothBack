@@ -1,11 +1,11 @@
 import { UserRepository } from '@/domain/repositories/userRepository';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '@/infrastructure/persistence/prisma/prisma.service';
 import { UserEntity } from '@/domain/entities/User/user';
 import { UserMapper } from '../mappers/userMapper';
 
-Injectable();
-export class PrismaUserRepository extends UserRepository {
+@Injectable()
+class PrismaUserRepository extends UserRepository {
   constructor(private readonly prisma: PrismaService) {
     super();
   }
@@ -63,6 +63,7 @@ export class PrismaUserRepository extends UserRepository {
         email,
       },
     });
-    return !!user;
+    return user ? true : false;
   }
 }
+export { PrismaUserRepository };

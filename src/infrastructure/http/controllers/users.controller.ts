@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Injectable, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../dtos/user/createUserDto';
 import { createUserUseCase } from '@/application/usecases/user/createUserUseCase';
@@ -18,6 +18,20 @@ export class UsersController {
     description: 'Internal server error.',
   })
   async create(@Body() body: CreateUserDto) {
-    await this.createUser.execute(body);
+    try {
+      await this.createUser.execute({
+        name: body.name,
+        email: body.email,
+        password: body.password,
+        passwordConfirmation: body.passwordConfirmation,
+      });
+
+      return {
+        message: 'User created successfully',
+      };
+    } catch (e) {
+      console.log(e);
+      return { message: e.message };
+    }
   }
 }

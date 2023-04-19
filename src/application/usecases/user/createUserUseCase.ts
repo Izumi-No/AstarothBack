@@ -24,13 +24,6 @@ export class createUserUseCase extends BaseUseCase<
       throw new Error('User already exists');
     }
 
-    if (
-      await userOrError.value.password.comparePassword(
-        request.passwordConfirmation,
-      )
-    ) {
-      throw new Error('Password confirmation does not match');
-    }
     const user = {
       id: userOrError.value.id,
       name: userOrError.value.name,

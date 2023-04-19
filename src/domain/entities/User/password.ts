@@ -2,9 +2,13 @@ import { Either, left, right } from '@/utils/either';
 
 import { InvalidPasswordLengthError } from './errors/invalidPasswordLengthError';
 
-import argon from 'argon2';
-
+import { hash, verify } from 'argon2';
+import { Inject, Injectable } from '@nestjs/common';
+import { Hasher } from '@/infrastructure/crypto/hasher';
+@Injectable()
 export class Password {
+  @Inject(Hasher)
+  private readonly hasher: Hasher;
   private constructor(private password: string, public hashed: boolean) {}
 
   static validate(password: string): boolean {
@@ -24,7 +28,7 @@ export class Password {
       return this.password;
     }
 
-    return await argon.hash(this.password);
+    return await this.hasher.hash(this.password);
   }
 
   public async comparePassword(plainTextPassword: string): Promise<boolean> {
@@ -33,10 +37,10 @@ export class Password {
     if (this.hashed) {
       hashed = this.password;
 
-      return await argon.verify(hashed, plainTextPassword);
+      return await verify(hashed, plainTextPassword);
     }
 
-    return this.password === plainTextPassword;
+    return this.password == plainTextPassword;
   }
 
   static create(
