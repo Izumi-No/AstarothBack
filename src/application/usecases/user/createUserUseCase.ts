@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from '@/domain/repositories/userRepository';
 
 @Injectable()
-export class createUserUseCase extends BaseUseCase<
+export class CreateUserUseCase extends BaseUseCase<
   createUserUseCase.Request,
   createUserUseCase.Response
 > {

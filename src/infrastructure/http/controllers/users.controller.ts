@@ -1,17 +1,21 @@
-import { Body, Controller, Injectable, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../dtos/user/createUserDto';
-import { createUserUseCase } from '@/application/usecases/user/createUserUseCase';
+import { CreateUserUseCase } from '@/application/usecases/user/createUserUseCase';
+import { GetAllUsersUseCase } from '@/application/usecases/user/getAllUsersUseCase';
 
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
-  constructor(private readonly createUser: createUserUseCase) {}
+  constructor(
+    private readonly createUserUseCase: CreateUserUseCase,
+    private readonly getAllUserUseCase: GetAllUsersUseCase,
+  ) {}
 
   @Post()
   @ApiResponse({
     status: 201,
-    description: 'The notification has been successfully created.',
+    description: 'The User has been successfully created.',
   })
   @ApiResponse({
     status: 500,
@@ -19,7 +23,7 @@ export class UsersController {
   })
   async create(@Body() body: CreateUserDto) {
     try {
-      await this.createUser.execute({
+      await this.createUserUseCase.execute({
         name: body.name,
         email: body.email,
         password: body.password,
@@ -29,6 +33,22 @@ export class UsersController {
       return {
         message: 'User created successfully',
       };
+    } catch (e) {
+      console.log(e);
+      return { message: e.message };
+    }
+  }
+
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'return all users',
+  })
+  async getAll() {
+    try {
+      const users = await this.getAllUserUseCase.execute({});
+
+      return users;
     } catch (e) {
       console.log(e);
       return { message: e.message };

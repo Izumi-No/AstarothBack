@@ -4,6 +4,7 @@ import { Argon2Hasher } from './argon2/argon2Hasher';
 
 @Module({
   providers: [
+    Argon2Hasher,
     {
       provide: Hasher,
       useClass: Argon2Hasher,
