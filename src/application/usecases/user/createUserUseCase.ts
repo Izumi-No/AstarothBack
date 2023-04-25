@@ -11,6 +11,7 @@ export class CreateUserUseCase extends BaseUseCase<
   constructor(private readonly userRepo: UserRepository) {
     super();
   }
+
   async execute(
     request: createUserUseCase.Request,
   ): Promise<createUserUseCase.Response> {
